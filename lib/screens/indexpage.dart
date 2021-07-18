@@ -1,4 +1,3 @@
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:quran/api/responses/index_data_get.dart';
 import 'package:quran/widgets/custom_card.dart';
@@ -20,37 +19,34 @@ class _IndexPageState extends State<IndexPage> {
     futureIndexData = fetchIndexData();
   }
 
-  TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FutureBuilder<IndexData>(
-          future: futureIndexData,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.chapters.length,
-                itemBuilder: (context, index) {
-                  return Text(snapshot.data!.chapters[index].nameSimple);
-                },
+    return FutureBuilder<IndexData>(
+      future: futureIndexData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data!.chapters.length,
+            itemBuilder: (context, index) {
+              return CustomCard(
+                top1stText: snapshot.data!.chapters[index].id.toString(),
+                top2ndText: snapshot.data!.chapters[index].nameComplex,
+                top3rdText: snapshot.data!.chapters[index].nameArabic,
+                bottom1stText: snapshot.data!.chapters[index].revelationPlace,
+                bottom2ndText:
+                    snapshot.data!.chapters[index].pages[0].toString() +
+                        " : " +
+                        snapshot.data!.chapters[index].pages[1].toString(),
+                bottom3rdText:
+                    snapshot.data!.chapters[index].versesCount.toString(),
               );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
-        AnimSearchBar(
-            textController: textController,
-            rtl: true,
-            width: MediaQuery.of(context).size.width,
-            onSuffixTap: () {
-              setState(() {
-                textController.clear();
-              });
-            }),
-      ],
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

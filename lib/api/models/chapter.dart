@@ -12,7 +12,7 @@ class Chapter {
   });
 
   int id;
-  RevelationPlace? revelationPlace;
+  String revelationPlace;
   int revelationOrder;
   bool bismillahPre;
   String nameSimple;
@@ -23,7 +23,7 @@ class Chapter {
 
   factory Chapter.fromJson(Map<String, dynamic> json) => Chapter(
         id: json["id"],
-        revelationPlace: revelationPlaceValues.map[json["revelation_place"]],
+        revelationPlace: json["revelation_place"],
         revelationOrder: json["revelation_order"],
         bismillahPre: json["bismillah_pre"],
         nameSimple: json["name_simple"],
@@ -35,7 +35,7 @@ class Chapter {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "revelation_place": revelationPlaceValues.reverse[revelationPlace],
+        "revelation_place": revelationPlace,
         "revelation_order": revelationOrder,
         "bismillah_pre": bismillahPre,
         "name_simple": nameSimple,
@@ -44,21 +44,4 @@ class Chapter {
         "verses_count": versesCount,
         "pages": List<dynamic>.from(pages.map((x) => x)),
       };
-}
-
-enum RevelationPlace { MAKKAH, MADINAH }
-
-final revelationPlaceValues = EnumValues(
-    {"madinah": RevelationPlace.MADINAH, "makkah": RevelationPlace.MAKKAH});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  Map<T, String>? reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap ??= map.map((k, v) => MapEntry(v, k));
-    return reverseMap!;
-  }
 }

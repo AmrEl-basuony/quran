@@ -14,6 +14,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final PageController controller = PageController(initialPage: 0);
     return Scaffold(
+      backgroundColor: Colors.green.shade900,
       body: SafeArea(
         child: PageView(
           controller: controller,
