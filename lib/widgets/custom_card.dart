@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran/api/models/surah_index.dart';
 
 class CustomCard extends StatelessWidget {
   CustomCard(
-      {required this.top1stText,
+      {required this.pageController,
+      required this.index,
+      required this.top1stText,
       required this.top2ndText,
       required this.top3rdText,
       required this.bottom1stText,
       required this.bottom2ndText,
       required this.bottom3rdText});
 
+  PageController pageController;
+  int index;
   final String top1stText,
       top2ndText,
       top3rdText,
@@ -18,14 +24,25 @@ class CustomCard extends StatelessWidget {
 
   final topStyle = const TextStyle(fontSize: 16);
 
+  final cardColor = Colors.blueGrey.shade100;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Provider.of<SurahIndex>(context, listen: false).setIndex(index);
+          if (pageController.hasClients) {
+            pageController.animateToPage(
+              1,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          }
+        },
         child: Card(
-          color: Colors.lime.shade700,
+          color: cardColor,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(children: [
@@ -50,7 +67,7 @@ class CustomCard extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Divider(
-                  color: Colors.yellow,
+                  color: Colors.black,
                   thickness: 2,
                 ),
               ),

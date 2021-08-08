@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quran/api/models/surah.dart';
+import 'package:quran/api/models/surah_index.dart';
 import 'package:quran/api/responses/surah_get.dart';
 
 class SurahPage extends StatefulWidget {
@@ -13,37 +15,43 @@ class _SurahPageState extends State<SurahPage> {
   late Future<Surah> futureSurah;
   var ayahNumber = 0;
   final textStyle = const TextStyle(fontSize: 18);
+  late int index;
 
   @override
   void initState() {
     super.initState();
-    futureSurah = fetchSurah(2);
+    index = Provider.of<SurahIndex>(context, listen: false).getIndex;
+    futureSurah = fetchSurah(index);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Surah>(
-      future: futureSurah,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SelectableText.rich(
-              TextSpan(text: " ", children: <InlineSpan>[
-                for (var ayah in snapshot.data!.verses)
-                  TextSpan(
-                      text:
-                          "${ayah.text} ${replaceFarsiNumber(ayah.verseKey)} ")
-              ]),
-              textDirection: TextDirection.rtl,
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
+    //todo does't redraw
+    return Consumer<SurahIndex>(builder: (context, data, child) {
+      futureSurah = fetchSurah(data.getIndex);
+      return FutureBuilder<Surah>(
+        future: futureSurah,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SelectableText.rich(
+                TextSpan(text: " ", children: <InlineSpan>[
+                  for (var ayah in snapshot.data!.verses)
+                    TextSpan(
+                        text:
+                            "${ayah.text} ${replaceFarsiNumber(ayah.verseKey)} ")
+                ]),
+                textDirection: TextDirection.rtl,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+    });
   }
 }
 

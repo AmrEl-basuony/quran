@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran/api/models/page_view_controller.dart';
 
 import 'screens/myhomepage.dart';
 
@@ -14,10 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: MyHomePage(),
+      theme: ThemeData(),
+      home: ChangeNotifierProvider(
+          create: (context) => PageViewController(), child: MyHomePage()),
     );
   }
 }

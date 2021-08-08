@@ -1,6 +1,4 @@
-import 'package:meta/meta.dart';
 import 'dart:convert';
-
 import 'verse.dart';
 
 Surah surahFromJson(String str) => Surah.fromJson(json.decode(str));
